@@ -1,0 +1,66 @@
+{
+  "loans": [
+    {
+      "id": 1,
+      "borrowerName": "John Doe",
+      "amount": 50000,
+      "interestRate": 5.5,
+      "loanTerm": 60,
+      "startDate": "2024-01-15",
+      "status": "active",
+      "monthlyPayment": 942.14
+    },
+    {
+      "id": 2,
+      "borrowerName": "Jane Smith",
+      "amount": 75000,
+      "interestRate": 4.8,
+      "loanTerm": 84,
+      "startDate": "2023-06-20",
+      "status": "active",
+      "monthlyPayment": 974.25
+    },
+    {
+      "id": 3,
+      "borrowerName": "Michael Johnson",
+      "amount": 25000,
+      "interestRate": 6.2,
+      "loanTerm": 36,
+      "startDate": "2024-03-10",
+      "status": "pending",
+      "monthlyPayment": 742.58
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "password123",
+      "role": "user"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "password": "password123",
+      "role": "user"
+    },
+    {
+      "id": 3,
+      "name": "Admin User",
+      "email": "admin@loanapp.com",
+      "password": "admin123",
+      "role": "admin"
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "loanId": 1,
+      "amount": 942.14,
+      "date": "2024-12-15",
+      "status": "completed"
+    }
+  ]
+}
