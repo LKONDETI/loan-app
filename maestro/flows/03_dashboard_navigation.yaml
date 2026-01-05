@@ -1,0 +1,44 @@
+appId: com.loanapp
+---
+# Dashboard Navigation Test - Test bottom tabs and navigation
+# Step 1: Login first to access dashboard
+- assertVisible:
+    text: "Email/Phone"
+
+- tapOn:
+    text: "Email/Phone"
+
+- inputText: "john@example.com"
+
+- tapOn:
+    text: "Password"
+
+- inputText: "password123"
+
+- tapOn:
+    text: "Sign in"
+
+# Step 2: Verify dashboard loaded - look for the title
+- assertVisible:
+    text: "Choose a loan"
+
+# Step 3: Click on 'My Loans' tab
+- tapOn:
+    text: "My Loans"
+
+# Step 4: Verify My Loans screen is visible
+- assertVisible:
+    text: "My Loans"
+
+# Step 5: Click on 'Profile' tab
+- tapOn:
+    text: "Profile"
+
+# Step 6: Verify Profile screen is visible
+- assertVisible:
+    text: "Profile"
+
+# ✅ Dashboard navigation test completed successfully
+
+
+

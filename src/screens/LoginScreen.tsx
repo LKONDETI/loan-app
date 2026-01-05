@@ -18,7 +18,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
   const handleSignIn = () => {
     if (email && password) {
-      navigation.navigate('Home');
+      navigation.navigate('Dashboard');
     }
   };
 
@@ -58,6 +58,14 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
         >
           <Text style={styles.signInButtonText}>Sign in</Text>
         </TouchableOpacity>
+
+        {/* Sign Up Link */}
+        <View style={styles.signUpLink}>
+          <Text style={styles.signUpLinkText}>Don't have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.signUpLinkButton}>Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -121,6 +129,20 @@ const styles = StyleSheet.create({
   signInButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '600',
+  },
+  signUpLink: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  signUpLinkText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  signUpLinkButton: {
+    fontSize: 14,
+    color: '#1FA29C',
     fontWeight: '600',
   },
 });

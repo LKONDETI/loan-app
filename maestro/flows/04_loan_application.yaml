@@ -1,0 +1,124 @@
+appId: com.loanapp
+---
+# Loan Application Flow Test - Test applying for a loan
+# Step 1: Login to dashboard
+- assertVisible:
+    text: "Email/Phone"
+
+- tapOn:
+    text: "Email/Phone"
+
+- inputText: "jane@example.com"
+
+- tapOn:
+    text: "Password"
+
+- inputText: "password123"
+
+- tapOn:
+    text: "Sign in"
+
+# Step 2: Verify home screen with loan options
+- assertVisible:
+    text: "Choose a loan"
+
+- assertVisible:
+    text: "Personal"
+
+- assertVisible:
+    text: "Business"
+
+# Step 3: Click on Personal loan
+- tapOn:
+    text: "Personal"
+
+# Step 4: Verify Loan Application screen opened
+- assertVisible:
+    text: "Loan Application"
+
+- assertVisible:
+    text: "Details"
+
+# Step 5: Fill in loan details - amount
+- tapOn:
+    text: "Enter loan amount"
+
+- inputText: "50000"
+
+# Step 6: Fill in loan term
+- tapOn:
+    text: "Enter loan term"
+
+- inputText: "60"
+
+# Step 7: Fill in purpose
+- tapOn:
+    text: "What is the loan for?"
+
+- inputText: "Home improvement"
+
+# Step 8: Click on 'You' tab
+- tapOn:
+    text: "You"
+
+# Step 9: Fill in personal details
+- tapOn:
+    text: "Enter first name"
+
+- inputText: "Jane"
+
+- tapOn:
+    text: "Enter last name"
+
+- inputText: "Smith"
+
+- tapOn:
+    text: "Enter email"
+
+- inputText: "jane@example.com"
+
+- tapOn:
+    text: "Enter phone number"
+
+- inputText: "5559876543"
+
+# Step 10: Click on 'Income' tab
+- tapOn:
+    text: "Income"
+
+# Step 11: Fill in income details
+- tapOn:
+    text: "Enter annual income"
+
+- inputText: "75000"
+
+- tapOn:
+    text: "Select employment status"
+
+- inputText: "Employed"
+
+- tapOn:
+    text: "Enter company name"
+
+- inputText: "Tech Corp"
+
+# Step 12: Click on 'Documents' tab
+- tapOn:
+    text: "Documents"
+
+# Step 13: Verify document upload area
+- assertVisible:
+    text: "Upload Documents"
+
+# Step 14: Click Next button to submit
+- scroll:
+    direction: "down"
+
+- tapOn:
+    text: "Next"
+
+# Step 15: Verify navigation back to dashboard
+- assertVisible:
+    text: "My Loans"
+
+# ✅ Loan application test completed successfully

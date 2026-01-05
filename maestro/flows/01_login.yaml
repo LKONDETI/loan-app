@@ -1,0 +1,32 @@
+appId: com.loanapp
+---
+# Login Flow Test - Basic user login
+# Step 1: Wait for login screen to appear
+- assertVisible:
+    text: "Sign in"
+
+# Step 2: Verify email/phone input field exists
+- assertVisible:
+    text: "Email/Phone"
+
+# Step 3: Tap email input and enter email
+- tapOn:
+    text: "Email/Phone"
+
+- inputText: "john@example.com"
+
+# Step 4: Tap password field and enter password
+- tapOn:
+    text: "Password"
+
+- inputText: "password123"
+
+# Step 5: Click sign in button
+- tapOn:
+    text: "Sign in"
+
+# Step 6: Navigate to Home screen
+- assertVisible:
+    text: "Home"
+
+# ✅ Login test completed successfully

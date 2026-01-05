@@ -190,7 +190,7 @@ export default function LoanApplicationScreen({
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.nextButton}
-          onPress={() => navigation.navigate('Profile')}
+          onPress={() => navigation.navigate('Dashboard')}
           activeOpacity={0.8}
         >
           <Text style={styles.nextButtonText}>Next</Text>

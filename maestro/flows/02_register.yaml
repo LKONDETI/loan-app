@@ -1,0 +1,72 @@
+appId: com.loanapp
+---
+# Registration Flow Test - Complete sign up process
+# Step 1: Verify login screen is visible
+- assertVisible:
+    text: "Sign in"
+
+# Step 2: Click 'Sign up' link to navigate to register screen
+- tapOn:
+    text: "Sign up"
+
+# Step 3: Verify registration screen elements
+- assertVisible:
+    text: "Create Account"
+
+# Step 5: Enter first name
+- tapOn:
+    text: "Enter your first name"
+
+- inputText: "Test"
+
+# Step 6: Enter last name
+- tapOn:
+    text: "Enter your last name"
+
+- inputText: "User"
+
+# Step 7: Enter email
+- tapOn:
+    text: "Enter your email"
+
+- inputText: "testuser@example.com"
+
+# Step 8: Enter phone number
+- tapOn:
+    text: "Enter your phone number"
+
+- inputText: "5551234567"
+
+# Step 9: Scroll down to see password fields
+- scroll:
+    direction: "down"
+
+# Step 10: Enter password
+- tapOn:
+    text: "Enter password"
+
+- inputText: "TestPassword123"
+
+# Step 11: Enter confirm password
+- tapOn:
+    text: "Confirm password"
+
+- inputText: "TestPassword123"
+
+# Step 12: Click 'Create Account' button
+- tapOn:
+    text: "Create Account"
+
+# Step 13: Verify success alert
+- assertVisible:
+    text: "OK"
+
+# Step 14: Click OK to dismiss alert
+- tapOn:
+    text: "OK"
+
+# Step 15: Verify we're back at login screen
+- assertVisible:
+    text: "Sign in"
+
+# ✅ Registration test completed successfully

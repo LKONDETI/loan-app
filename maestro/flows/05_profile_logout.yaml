@@ -1,0 +1,72 @@
+appId: com.loanapp
+---
+# Profile Screen Test - Test profile screen and logout
+# Step 1: Login to dashboard
+- assertVisible:
+    text: "Email/Phone"
+
+- tapOn:
+    text: "Email/Phone"
+
+- inputText: "admin@loanapp.com"
+
+- tapOn:
+    text: "Password"
+
+- inputText: "admin123"
+
+- tapOn:
+    text: "Sign in"
+
+# Step 2: Navigate to Profile tab
+- tapOn:
+    text: "Profile"
+
+# Step 3: Verify profile screen elements
+- assertVisible:
+    text: "Personal Info"
+
+- assertVisible:
+    text: "Personal info"
+
+- assertVisible:
+    text: "Documents"
+
+- assertVisible:
+    text: "Settings"
+
+# Step 4: Verify menu items are clickable
+- tapOn:
+    text: "Personal info"
+
+# Step 5: Click on Documents menu item
+- tapOn:
+    text: "Documents"
+
+# Step 6: Click on Settings menu item
+- tapOn:
+    text: "Settings"
+
+# Step 7: Scroll down to find logout button
+- scroll:
+    direction: "down"
+
+# Step 8: Verify logout button is visible
+- assertVisible:
+    text: "Log out"
+
+# Step 9: Click logout button
+- tapOn:
+    text: "Log out"
+
+# Step 10: Verify we're back at login screen
+- assertVisible:
+    text: "Sign in"
+
+- assertVisible:
+    text: "Email/Phone"
+
+- assertVisible:
+    text: "Password"
+
+# ✅ Profile and logout test completed successfully
