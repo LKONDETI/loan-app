@@ -111,8 +111,7 @@ appId: com.loanapp
     text: "Upload Documents"
 
 # Step 14: Click Next button to submit
-- scroll:
-    direction: "down"
+
 
 - tapOn:
     text: "Next"

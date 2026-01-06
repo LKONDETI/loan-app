@@ -22,13 +22,13 @@ appId: com.loanapp
 - assertVisible:
     text: "Choose a loan"
 
-# Step 3: Click on 'My Loans' tab
+# Step 3: Click on 'Personal Loans' tab
 - tapOn:
-    text: "My Loans"
+    text: "Personal Loans"
 
-# Step 4: Verify My Loans screen is visible
+# Step 4: Verify Personal Loans screen is visible
 - assertVisible:
-    text: "My Loans"
+    text: "Details"
 
 # Step 5: Click on 'Profile' tab
 - tapOn:
