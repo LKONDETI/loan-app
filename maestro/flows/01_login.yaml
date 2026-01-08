@@ -21,9 +21,13 @@ appId: com.loanapp
 
 - inputText: "password123"
 
+
 # Step 5: Click sign in button
 - tapOn:
     text: "Sign in"
+
+- tapOn:
+    text: "Not Now"
 
 # Step 6: Navigate to Home screen
 - assertVisible:

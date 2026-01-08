@@ -18,11 +18,18 @@ appId: com.loanapp
 - tapOn:
     text: "Sign in"
 
-# Step 2: Navigate to Profile tab
+- tapOn:
+    text: "Not Now"
+
+# Step 2: Verify dashboard loaded on Home tab
+- assertVisible:
+    text: "Choose a loan"
+
+# Step 3: Navigate to Profile tab
 - tapOn:
     text: "Profile"
 
-# Step 3: Verify profile screen elements
+# Step 4: Verify profile screen elements
 - assertVisible:
     text: "Personal Info"
 
@@ -35,21 +42,17 @@ appId: com.loanapp
 - assertVisible:
     text: "Settings"
 
-# Step 4: Verify menu items are clickable
+# Step 5: Verify menu items are clickable
 - tapOn:
     text: "Personal info"
 
-# Step 5: Click on Documents menu item
+# Step 6: Click on Documents menu item
 - tapOn:
     text: "Documents"
 
-# Step 6: Click on Settings menu item
+# Step 7: Click on Settings menu item
 - tapOn:
     text: "Settings"
-
-# Step 7: Scroll down to find logout button
-- scroll:
-    direction: "down"
 
 # Step 8: Verify logout button is visible
 - assertVisible:

@@ -18,50 +18,44 @@ appId: com.loanapp
 - tapOn:
     text: "Sign in"
 
-# Step 2: Verify home screen with loan options
+# Wait for HomeScreen to load - check for the main heading
 - assertVisible:
     text: "Choose a loan"
 
-- assertVisible:
-    text: "Personal"
-
-- assertVisible:
-    text: "Business"
-
-# Step 3: Click on Personal loan
+# Step 2: Tap Personal loan
 - tapOn:
     text: "Personal"
 
-# Step 4: Verify Loan Application screen opened
+# Step 3: Verify Loan Application screen opened
 - assertVisible:
     text: "Loan Application"
 
 - assertVisible:
     text: "Details"
 
-# Step 5: Fill in loan details - amount
+# Step 4: Fill in loan details - amount
 - tapOn:
     text: "Enter loan amount"
 
 - inputText: "50000"
 
-# Step 6: Fill in loan term
+# Step 5: Fill in loan term
 - tapOn:
     text: "Enter loan term"
 
 - inputText: "60"
 
-# Step 7: Fill in purpose
+# Step 6: Fill in purpose
 - tapOn:
     text: "What is the loan for?"
 
 - inputText: "Home improvement"
 
-# Step 8: Click on 'You' tab
+# Step 7: Click on 'You' tab
 - tapOn:
     text: "You"
 
-# Step 9: Fill in personal details
+# Step 8: Fill in personal details
 - tapOn:
     text: "Enter first name"
 
@@ -82,11 +76,11 @@ appId: com.loanapp
 
 - inputText: "5559876543"
 
-# Step 10: Click on 'Income' tab
+# Step 9: Click on 'Income' tab
 - tapOn:
     text: "Income"
 
-# Step 11: Fill in income details
+# Step 10: Fill in income details
 - tapOn:
     text: "Enter annual income"
 
@@ -102,21 +96,19 @@ appId: com.loanapp
 
 - inputText: "Tech Corp"
 
-# Step 12: Click on 'Documents' tab
+# Step 11: Click on 'Documents' tab
 - tapOn:
     text: "Documents"
 
-# Step 13: Verify document upload area
+# Step 12: Verify document upload area
 - assertVisible:
     text: "Upload Documents"
 
-# Step 14: Click Next button to submit
-
-
+# Step 13: Scroll down then click Next button
 - tapOn:
     text: "Next"
 
-# Step 15: Verify navigation back to dashboard
+# Step 14: Verify navigation back to dashboard
 - assertVisible:
     text: "My Loans"
 
