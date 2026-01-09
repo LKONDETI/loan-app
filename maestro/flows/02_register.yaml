@@ -31,15 +31,12 @@ appId: com.loanapp
 
 - inputText: "testuser@example.com"
 
+
 # Step 8: Enter phone number
 - tapOn:
     text: "Enter your phone number"
 
 - inputText: "5551234567"
-
-# Step 9: Scroll down to see password fields
-- scroll:
-    direction: "down"
 
 # Step 10: Enter password
 - tapOn:

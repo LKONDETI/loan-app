@@ -1,7 +1,7 @@
 {
   "loans": [
     {
-      "id": 1,
+      "id": "1",
       "borrowerName": "John Doe",
       "amount": 50000,
       "interestRate": 5.5,
@@ -11,7 +11,7 @@
       "monthlyPayment": 942.14
     },
     {
-      "id": 2,
+      "id": "2",
       "borrowerName": "Jane Smith",
       "amount": 75000,
       "interestRate": 4.8,
@@ -21,7 +21,7 @@
       "monthlyPayment": 974.25
     },
     {
-      "id": 3,
+      "id": "3",
       "borrowerName": "Michael Johnson",
       "amount": 25000,
       "interestRate": 6.2,
@@ -33,30 +33,38 @@
   ],
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "John Doe",
       "email": "john@example.com",
       "password": "password123",
       "role": "user"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Jane Smith",
       "email": "jane@example.com",
       "password": "password123",
       "role": "user"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Admin User",
       "email": "admin@loanapp.com",
       "password": "admin123",
       "role": "admin"
+    },
+    {
+      "id": 1767847201834,
+      "name": "test t",
+      "email": "testuser@example.com",
+      "phone": "1231231234",
+      "password": "pqsszord&é\"",
+      "role": "user"
     }
   ],
   "payments": [
     {
-      "id": 1,
+      "id": "1",
       "loanId": 1,
       "amount": 942.14,
       "date": "2024-12-15",
