@@ -31,6 +31,25 @@ export default function LoanApplicationScreen({
     { id: 'documents', label: 'Documents' },
   ] as const;
 
+  const isLastTab = activeTab === 'documents';
+
+  const goToNextTabOrSubmit = () => {
+    if (activeTab === 'details') {
+      setActiveTab('you');
+      return;
+    }
+    if (activeTab === 'you') {
+      setActiveTab('income');
+      return;
+    }
+    if (activeTab === 'income') {
+      setActiveTab('documents');
+      return;
+    }
+    // documents -> final submit
+    navigation.navigate('Dashboard');
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'details':
@@ -186,14 +205,14 @@ export default function LoanApplicationScreen({
         {renderTabContent()}
       </ScrollView>
 
-      {/* Next Button */}
+      {/* Next / Submit Button */}
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.nextButton}
-          onPress={() => navigation.navigate('Dashboard')}
+          onPress={goToNextTabOrSubmit}
           activeOpacity={0.8}
         >
-          <Text style={styles.nextButtonText}>Next</Text>
+          <Text style={styles.nextButtonText}>{isLastTab ? 'Submit' : 'Next'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -202,8 +221,8 @@ export default function LoanApplicationScreen({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
+    // removed flex: 1 to reduce extra vertical space
   },
   header: {
     flexDirection: 'row',
@@ -230,9 +249,8 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
     backgroundColor: '#fff',
+    // removed bottom border to eliminate line/gap under tabs
   },
   tab: {
     paddingHorizontal: 16,
@@ -241,9 +259,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   activeTab: {
-    borderBottomWidth: 3,
-    borderBottomColor: '#1B2B5C',
-    marginBottom: -1,
+    // removed borderBottom and negative margin so content can sit flush below
   },
   tabLabel: {
     fontSize: 14,
@@ -257,21 +273,22 @@ const styles = StyleSheet.create({
   tabIndicator: {
     height: 3,
     backgroundColor: '#1B2B5C',
-    marginTop: 8,
+    marginTop: 4,
   },
   contentContainer: {
-    flex: 1,
+
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingTop: 4, // tighter to sit closer to tabs
+
   },
   tabContent: {
-    gap: 16,
+    gap: 8,
   },
   sectionLabel: {
     fontSize: 14,
     fontWeight: '600',
     color: '#1B2B5C',
-    marginTop: 8,
+    marginTop: 4,
   },
   input: {
     borderWidth: 1,
