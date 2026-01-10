@@ -1,23 +1,5 @@
 appId: com.loanapp
 ---
-# Dashboard Navigation Test - Test bottom tabs and navigation
-# Step 1: Login first to access dashboard
-- assertVisible:
-    text: "Email/Phone"
-
-- tapOn:
-    text: "Email/Phone"
-
-- inputText: "john@example.com"
-
-- tapOn:
-    text: "Password"
-
-- inputText: "password123"
-
-- tapOn:
-    text: "Sign in"
-
 # Step 2: Verify dashboard loaded - look for the title
 - assertVisible:
     text: "Choose a loan"
