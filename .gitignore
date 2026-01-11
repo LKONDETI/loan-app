@@ -39,3 +39,9 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Python / Backend
+venv/
+__pycache__/
+*.pyc
+.env
