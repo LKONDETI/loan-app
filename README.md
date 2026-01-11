@@ -266,6 +266,12 @@ Key environment variables (see `.env.example`):
 - [ ] Biometric authentication
 - [ ] Multi-language support
 
+## 🔄 Recent Changes (v1.0.1)
+
+- **Backend Initialization**: Successfully scaffolded FastAPI backend with Prisma ORM and PostgreSQL.
+- **Security Configuration**: Updated `.gitignore` to strictly exclude `node_modules`, `venv`, and `.env` secrets.
+- **Documentation**: Added comprehensive project documentation, setup guides, and API details.
+
 ## 📄 License
 
 ISC
