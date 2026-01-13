@@ -10,9 +10,10 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import apiClient from '../api/client';
 
 interface Loan {
-  id: number;
+  id: string;
   borrowerName: string;
   amount: number;
   interestRate: number;
@@ -20,6 +21,12 @@ interface Loan {
   startDate: string;
   status: string;
   monthlyPayment: number;
+  createdAt: string;
+}
+
+interface LoansResponse {
+  loans: Loan[];
+  total: number;
 }
 
 interface LoansListScreenProps {
@@ -40,9 +47,8 @@ export default function LoansListScreen({
   const fetchLoans = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/loans');
-      const data = await response.json();
-      setLoans(data);
+      const response = await apiClient.get<LoansResponse>('/loans');
+      setLoans(response.data.loans);
     } catch (error) {
       console.log('Error fetching loans:', error);
     } finally {

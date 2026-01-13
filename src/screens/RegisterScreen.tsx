@@ -8,8 +8,10 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { authService } from '../api/auth';
 
 interface RegisterScreenProps {
   navigation: any;
@@ -62,46 +64,37 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     return true;
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  // ... (existing helper functions if any)
+
   const handleRegister = async () => {
     if (!validateForm()) {
       return;
     }
 
+    setIsLoading(true);
     try {
-      // Create new user in JSON Server
-      const newUser = {
-        id: Date.now(),
-        name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-        role: 'user',
-      };
+      // Use the name field for the backend which expects "name" not firstName/lastName
+      const fullName = `${formData.firstName} ${formData.lastName}`;
+      await authService.register(fullName, formData.email, formData.password);
 
-      const response = await fetch('http://localhost:3001/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUser),
-      });
-
-      if (response.ok) {
-        Alert.alert(
-          'Success',
-          'Registration successful! Please sign in.',
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('Login'),
-            },
-          ]
-        );
-      } else {
-        Alert.alert('Error', 'Registration failed. Please try again.');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Unable to connect to server. Please try again.');
+      Alert.alert(
+        'Success',
+        'Registration successful! Please sign in.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login'),
+          },
+        ]
+      );
+    } catch (err: any) {
+      console.error(err);
+      const errorMessage = err.response?.data?.detail || 'Registration failed. Please try again.';
+      Alert.alert('Error', errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -221,11 +214,16 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 
             {/* Register Button */}
             <TouchableOpacity
-              style={styles.registerButton}
+              style={[styles.registerButton, isLoading && styles.disabledButton]}
               onPress={handleRegister}
               activeOpacity={0.8}
+              disabled={isLoading}
             >
-              <Text style={styles.registerButtonText}>Create Account</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.registerButtonText}>Create Account</Text>
+              )}
             </TouchableOpacity>
 
             {/* Sign In Link */}
@@ -362,5 +360,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1FA29C',
     fontWeight: '600',
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 });

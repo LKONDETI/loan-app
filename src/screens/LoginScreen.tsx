@@ -6,7 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
+import { useAuth } from '../context/AuthContext';
+import { authService } from '../api/auth';
+
 
 interface LoginScreenProps {
   navigation: any;
@@ -15,10 +19,28 @@ interface LoginScreenProps {
 export default function LoginScreen({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { login } = useAuth();
 
-  const handleSignIn = () => {
-    if (email && password) {
-      navigation.navigate('Dashboard');
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+    
+    setError('');
+    setIsLoading(true);
+    
+    try {
+      const response = await authService.login(email, password);
+      // The login function from context will handle navigation
+      await login(response.access_token);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -32,6 +54,11 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
           </View>
         </View>
 
+        {/* Error Message */}
+        {error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : null}
+
         {/* Form */}
         <TextInput
           style={styles.input}
@@ -39,6 +66,8 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
           placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
 
         <TextInput
@@ -52,11 +81,16 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
         {/* Sign In Button */}
         <TouchableOpacity
-          style={styles.signInButton}
+          style={[styles.signInButton, isLoading && styles.disabledButton]}
           onPress={handleSignIn}
           activeOpacity={0.8}
+          disabled={isLoading}
         >
-          <Text style={styles.signInButtonText}>Sign in</Text>
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.signInButtonText}>Sign in</Text>
+          )}
         </TouchableOpacity>
 
         {/* Sign Up Link */}
@@ -144,5 +178,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1FA29C',
     fontWeight: '600',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,20 +7,69 @@ import {
   ScrollView,
   SafeAreaView,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { authService } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
+
+interface UserProfile {
+  name: string;
+  email: string;
+  phone?: string;
+}
 
 interface ProfileScreenProps {
   navigation: any;
 }
 
 export default function ProfileScreen({ navigation }: ProfileScreenProps) {
-  const handleLogout = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { logout } = useAuth(); // Use logout from context which handles state update
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const userData = await authService.getCurrentUser();
+      
+      // Default fallback if some fields are missing (though API should return them)
+      if (userData) {
+         setUser({
+             name: userData.name || 'User',
+             email: userData.email,
+             phone: '', // API might not return this yet if not in UserResponse schema, check schemas.py
+         });
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleLogout = async () => {
+    await logout();
+    // Navigation reset is handled by AuthContext/RootNavigator
+  };
+  
+  const getInitials = (name: string) => {
+      const parts = name.split(' ');
+      if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+      return name.slice(0, 2).toUpperCase();
+  };
+
+  if (loading) {
+      return (
+          <View style={[styles.container, styles.centerContent]}>
+              <ActivityIndicator size="large" color="#1FA29C" />
+          </View>
+      );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,15 +78,15 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>JD</Text>
+              <Text style={styles.avatarText}>{user ? getInitials(user.name) : 'JD'}</Text>
             </View>
             <View style={styles.verificationBadge}>
               <Ionicons name="checkmark" size={16} color="#fff" />
             </View>
           </View>
 
-          <Text style={styles.profileName}>Personal Info</Text>
-          <Text style={styles.profileSubtext}>First agrees</Text>
+          <Text style={styles.profileName}>{user?.name || 'User Name'}</Text>
+          <Text style={styles.profileSubtext}>{user?.email || 'email@example.com'}</Text>
         </View>
 
         {/* Menu Items */}
@@ -190,5 +239,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
