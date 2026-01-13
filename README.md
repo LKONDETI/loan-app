@@ -266,8 +266,14 @@ Key environment variables (see `.env.example`):
 - [ ] Biometric authentication
 - [ ] Multi-language support
 
-## 🔄 Recent Changes (v1.0.1)
+## 🔄 Recent Changes (v1.1.0)
 
+- **Auth Integration**: Implemented JWT authentication flow with login, register, and token management.
+- **Context API**: Added `AuthContext` for global session state management.
+- **API Client**: Configured Axios client with automatic token injection.
+- **Screen Updates**: Connected Login and Register screens to real backend endpoints.
+
+### Previous Changes (v1.0.1)
 - **Backend Initialization**: Successfully scaffolded FastAPI backend with Prisma ORM and PostgreSQL.
 - **Security Configuration**: Updated `.gitignore` to strictly exclude `node_modules`, `venv`, and `.env` secrets.
 - **Documentation**: Added comprehensive project documentation, setup guides, and API details.
