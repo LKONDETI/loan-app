@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,12 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { authService } from '../api/auth';
+import apiClient from '../api/client';
 
 interface LoanApplicationScreenProps {
   navigation: any;
@@ -22,7 +26,43 @@ export default function LoanApplicationScreen({
   route,
 }: LoanApplicationScreenProps) {
   const [activeTab, setActiveTab] = useState<TabType>('details');
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  
   const loanType = route.params?.loanType;
+
+  // Form State
+  const [amount, setAmount] = useState('');
+  const [term, setTerm] = useState('');
+  const [purpose, setPurpose] = useState('');
+  
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  
+  const [income, setIncome] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState('');
+  const [company, setCompany] = useState('');
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const user = await authService.getCurrentUser();
+      if (user) {
+        setUserId(user.id);
+        setEmail(user.email);
+        const nameParts = user.name.split(' ');
+        if (nameParts.length > 0) setFirstName(nameParts[0]);
+        if (nameParts.length > 1) setLastName(nameParts.slice(1).join(' '));
+      }
+    } catch (error) {
+      console.log('Error fetching user for application:', error);
+    }
+  };
 
   const tabs = [
     { id: 'details', label: 'Details' },
@@ -33,7 +73,37 @@ export default function LoanApplicationScreen({
 
   const isLastTab = activeTab === 'documents';
 
-  const goToNextTabOrSubmit = () => {
+  const validateTab = () => {
+    switch (activeTab) {
+      case 'details':
+        if (!amount || !term || !purpose) {
+          Alert.alert('Missing Fields', 'Please fill in all loan details.');
+          return false;
+        }
+        return true;
+      case 'you':
+        if (!firstName || !lastName || !email || !phone) {
+          Alert.alert('Missing Fields', 'Please fill in all personal details.');
+          return false;
+        }
+        return true;
+      case 'income':
+         // Optional for demo, but good to have
+         return true;
+      default:
+        return true;
+    }
+  };
+
+  const calculateMonthlyPayment = (principal: number, months: number, rate: number) => {
+    if (principal <= 0 || months <= 0) return 0;
+    const monthlyRate = rate / 100 / 12;
+    return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+  };
+
+  const goToNextTabOrSubmit = async () => {
+    if (!validateTab()) return;
+
     if (activeTab === 'details') {
       setActiveTab('you');
       return;
@@ -46,8 +116,54 @@ export default function LoanApplicationScreen({
       setActiveTab('documents');
       return;
     }
-    // documents -> final submit
-    navigation.navigate('Dashboard');
+    
+    // Final Submit
+    await handleSubmit();
+  };
+
+  const handleSubmit = async () => {
+    if (!userId) {
+      Alert.alert('Error', 'User session invalid. Please login again.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const principal = parseFloat(amount);
+      const months = parseInt(term);
+      const rate = 8.5; // Fixed rate for demo
+      const monthlyPayment = calculateMonthlyPayment(principal, months, rate);
+
+      const payload = {
+        userId,
+        borrowerName: `${firstName} ${lastName}`,
+        amount: principal,
+        interestRate: rate,
+        loanTerm: months,
+        startDate: new Date().toISOString(),
+        status: 'pending',
+        monthlyPayment: parseFloat(monthlyPayment.toFixed(2)),
+      };
+
+      await apiClient.post('/loans', payload);
+
+      Alert.alert(
+        'Success',
+        'Your loan application has been submitted successfully!',
+        [
+          {
+            text: 'Go to Dashboard',
+            onPress: () => navigation.navigate('Dashboard'),
+          },
+        ]
+      );
+    } catch (error: any) {
+      console.error('Loan submission error:', error);
+      const msg = error.response?.data?.detail || 'Failed to submit application.';
+      Alert.alert('Application Failed', msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderTabContent = () => {
@@ -55,27 +171,33 @@ export default function LoanApplicationScreen({
       case 'details':
         return (
           <View style={styles.tabContent}>
-            <Text style={styles.sectionLabel}>Loan Amount</Text>
+            <Text style={styles.sectionLabel}>Loan Amount ($)</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter loan amount"
+              placeholder="Ex: 5000"
               placeholderTextColor="#999"
               keyboardType="decimal-pad"
+              value={amount}
+              onChangeText={setAmount}
             />
 
             <Text style={styles.sectionLabel}>Loan Term (Months)</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter loan term"
+              placeholder="Ex: 12"
               placeholderTextColor="#999"
               keyboardType="number-pad"
+              value={term}
+              onChangeText={setTerm}
             />
 
             <Text style={styles.sectionLabel}>Purpose</Text>
             <TextInput
               style={styles.input}
-              placeholder="What is the loan for?"
+              placeholder="Ex: Home Renovation"
               placeholderTextColor="#999"
+              value={purpose}
+              onChangeText={setPurpose}
             />
           </View>
         );
@@ -87,6 +209,8 @@ export default function LoanApplicationScreen({
               style={styles.input}
               placeholder="Enter first name"
               placeholderTextColor="#999"
+              value={firstName}
+              onChangeText={setFirstName}
             />
 
             <Text style={styles.sectionLabel}>Last Name</Text>
@@ -94,6 +218,8 @@ export default function LoanApplicationScreen({
               style={styles.input}
               placeholder="Enter last name"
               placeholderTextColor="#999"
+              value={lastName}
+              onChangeText={setLastName}
             />
 
             <Text style={styles.sectionLabel}>Email</Text>
@@ -102,6 +228,9 @@ export default function LoanApplicationScreen({
               placeholder="Enter email"
               placeholderTextColor="#999"
               keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              editable={false} // Prefilled from login
             />
 
             <Text style={styles.sectionLabel}>Phone</Text>
@@ -110,25 +239,31 @@ export default function LoanApplicationScreen({
               placeholder="Enter phone number"
               placeholderTextColor="#999"
               keyboardType="phone-pad"
+              value={phone}
+              onChangeText={setPhone}
             />
           </View>
         );
       case 'income':
         return (
           <View style={styles.tabContent}>
-            <Text style={styles.sectionLabel}>Annual Income</Text>
+            <Text style={styles.sectionLabel}>Annual Income ($)</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter annual income"
+              placeholder="Ex: 60000"
               placeholderTextColor="#999"
               keyboardType="decimal-pad"
+              value={income}
+              onChangeText={setIncome}
             />
 
             <Text style={styles.sectionLabel}>Employment Status</Text>
             <TextInput
               style={styles.input}
-              placeholder="Select employment status"
+              placeholder="Ex: Full-time"
               placeholderTextColor="#999"
+              value={employmentStatus}
+              onChangeText={setEmploymentStatus}
             />
 
             <Text style={styles.sectionLabel}>Company Name</Text>
@@ -136,6 +271,8 @@ export default function LoanApplicationScreen({
               style={styles.input}
               placeholder="Enter company name"
               placeholderTextColor="#999"
+              value={company}
+              onChangeText={setCompany}
             />
           </View>
         );
@@ -147,6 +284,7 @@ export default function LoanApplicationScreen({
               <Text style={styles.uploadText}>Upload Documents</Text>
               <Text style={styles.uploadSubtext}>ID, Pay stubs, Bank statements</Text>
             </TouchableOpacity>
+            <Text style={styles.hintText}>* You can skip uploading for this demo</Text>
           </View>
         );
       default:
@@ -208,11 +346,16 @@ export default function LoanApplicationScreen({
       {/* Next / Submit Button */}
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.nextButton}
+          style={[styles.nextButton, loading && styles.disabledButton]}
           onPress={goToNextTabOrSubmit}
           activeOpacity={0.8}
+          disabled={loading}
         >
-          <Text style={styles.nextButtonText}>{isLastTab ? 'Submit' : 'Next'}</Text>
+          {loading ? (
+             <ActivityIndicator color="#fff" />
+          ) : (
+             <Text style={styles.nextButtonText}>{isLastTab ? 'Submit Application' : 'Next'}</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -221,8 +364,8 @@ export default function LoanApplicationScreen({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#fff',
-    // removed flex: 1 to reduce extra vertical space
   },
   header: {
     flexDirection: 'row',
@@ -250,7 +393,7 @@ const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    // removed bottom border to eliminate line/gap under tabs
+    maxHeight: 50,
   },
   tab: {
     paddingHorizontal: 16,
@@ -258,9 +401,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     position: 'relative',
   },
-  activeTab: {
-    // removed borderBottom and negative margin so content can sit flush below
-  },
+  activeTab: {},
   tabLabel: {
     fontSize: 14,
     fontWeight: '500',
@@ -276,13 +417,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   contentContainer: {
-
+    flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 4, // tighter to sit closer to tabs
-
+    paddingTop: 16,
   },
   tabContent: {
-    gap: 8,
+    gap: 16,
+    paddingBottom: 24,
   },
   sectionLabel: {
     fontSize: 14,
@@ -320,6 +461,12 @@ const styles = StyleSheet.create({
     color: '#999',
     marginTop: 4,
   },
+  hintText: {
+     fontSize: 12,
+     color: '#666',
+     alignSelf: 'center',
+     fontStyle: 'italic',
+  },
   footer: {
     paddingHorizontal: 16,
     paddingVertical: 16,
@@ -332,6 +479,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
   nextButtonText: {
     color: '#fff',
