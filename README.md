@@ -88,11 +88,11 @@ loan-app/
    npm run web       # Web browser
    ```
 
-4. **(Optional) Start mock JSON server** (for development without backend):
+4. **(Legacy) Start mock JSON server** (Only if backend is not running):
    ```bash
    npm run api
    ```
-   This starts json-server on `http://localhost:3001`
+   This starts json-server on `http://localhost:3001`. **Recommended:** Use the FastAPI backend instead.
 
 ### Backend Setup
 
@@ -266,8 +266,16 @@ Key environment variables (see `.env.example`):
 - [ ] Biometric authentication
 - [ ] Multi-language support
 
-## 🔄 Recent Changes (v1.1.0)
+## 🔄 Recent Changes (v1.2.0)
+- **Frontend Integration Complete**:
+    - **Loan Application**: Connected to backend with user pre-filling and real-time calculations.
+    - **Profile**: Displays real user data fetched from the API.
+    - **Loans List**: Fetches active loans from the PostgreSQL database.
+- **Backend Stability**:
+    - Confirmed authentication flow (Login/Register/Refresh).
+    - Verified data migration from legacy `db.json`.
 
+### v1.1.0
 - **Auth Integration**: Implemented JWT authentication flow with login, register, and token management.
 - **Context API**: Added `AuthContext` for global session state management.
 - **API Client**: Configured Axios client with automatic token injection.
