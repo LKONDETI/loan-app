@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../api/auth';
+import { Ionicons } from '@expo/vector-icons';
 
 
 interface LoginScreenProps {
@@ -19,6 +20,7 @@ interface LoginScreenProps {
 export default function LoginScreen({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
@@ -70,14 +72,26 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
           keyboardType="email-address"
         />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#999"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Password"
+            placeholderTextColor="#999"
+            secureTextEntry={!isPasswordVisible}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            style={styles.eyeIcon}
+          >
+            <Ionicons
+              name={isPasswordVisible ? 'eye-off' : 'eye'}
+              size={24}
+              color="#999"
+            />
+          </TouchableOpacity>
+        </View>
 
         {/* Sign In Button */}
         <TouchableOpacity
@@ -152,6 +166,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontSize: 16,
     color: '#333',
+    backgroundColor: '#fff',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 12,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: '#333',
+  },
+  eyeIcon: {
+    padding: 4,
   },
   signInButton: {
     backgroundColor: '#1B2B5C',

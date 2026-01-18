@@ -77,7 +77,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
     try {
       // Use the name field for the backend which expects "name" not firstName/lastName
       const fullName = `${formData.firstName} ${formData.lastName}`;
-      await authService.register(fullName, formData.email, formData.password);
+      await authService.register(fullName, formData.email, formData.password, formData.phone);
 
       Alert.alert(
         'Success',

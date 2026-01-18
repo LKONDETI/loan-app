@@ -26,11 +26,12 @@ export const authService = {
         return response.data;
     },
 
-    async register(name: string, email: string, password: string): Promise<any> {
+    async register(name: string, email: string, password: string, phone?: string): Promise<any> {
         const response = await apiClient.post('/auth/register', {
             name,
             email,
             password,
+            phone,
         });
         return response.data;
     },
