@@ -23,7 +23,8 @@ async def main():
     
     try:
         # Read db.json
-        db_json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'db.json')
+        # Read db.json
+        db_json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'db.json')
         print(f"Reading data from: {db_json_path}")
         
         with open(db_json_path, 'r') as f:
